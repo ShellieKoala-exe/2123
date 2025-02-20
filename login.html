@@ -9,30 +9,55 @@
     <script>
         // Function to check if the page is accessed from a homescreen shortcut
         function isHomescreen() {
-            return (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true);
+            return (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        }
+
+        // Function to load passwords from passwords.json
+        async function loadPasswords() {
+            try {
+                const response = await fetch('passwords.json');
+                if (!response.ok) {
+                    throw new Error('Failed to load passwords');
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('Error loading passwords:', error);
+                alert('An error occurred. Please try again.');
+                return {};
+            }
         }
 
         // Function to validate the password
-        function validatePassword() {
+        async function validatePassword() {
             const password = document.getElementById('password').value;
-            fetch('validatePassword.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ password: password })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.valid) {
-                    window.location.href = 'https://venswish.vercel.app/index.html';
-                } else {
-                    alert('Invalid password or usage limit exceeded.');
-                }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+            if (!password) {
+                alert('Please enter a password.');
+                return;
+            }
+
+            // Load passwords from passwords.json
+            const passwords = await loadPasswords();
+
+            // Check if the password exists
+            if (!passwords[password]) {
+                alert('Invalid password.');
+                return;
+            }
+
+            // Check if the password has exceeded the usage limit (30 uses)
+            if (passwords[password].uses >= 30) {
+                alert('Usage limit exceeded.');
+                return;
+            }
+
+            // Increment the usage count
+            passwords[password].uses += 1;
+
+            // Save the updated passwords back to localStorage
+            localStorage.setItem('passwords', JSON.stringify(passwords));
+
+            // Redirect to the target page
+            window.location.href = 'https://venswish.vercel.app/index.html';
         }
 
         // Redirect if not accessed from homescreen
