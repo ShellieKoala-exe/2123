@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: application/json');
 
+// Read the JSON input
 $data = json_decode(file_get_contents('php://input'), true);
 $password = $data['password'];
 
@@ -17,6 +18,7 @@ if (json_last_error() !== JSON_ERROR_NONE) {
     exit;
 }
 
+// Check if the password exists and has fewer than 30 uses
 if (isset($passwords[$password]) && $passwords[$password]['uses'] < 30) {
     $passwords[$password]['uses'] += 1; // Increment usage count
     file_put_contents($passwordsFile, json_encode($passwords)); // Save updated usage
