@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Activation Page</title>
+</head>
+<body>
+  <h1>Enter Activation Code</h1>
+  <input type="password" id="activation-code" placeholder="Enter activation code">
+  <button onclick="submitCode()">Submit</button>
+  <button onclick="window.location.href='https://t.me/venleaks'">Ingen Kod</button>
+
+  <script>
+    // List of valid passwords (1000 example passwords)
+    const validPasswords = [
+      "u3d6c7i9z5x", "v2r5b7e1a3t", "h5q8n3y6f2p", "j1k2l5z3w9b", "r9v0t2o6p5s",
+      "k3n2p8c4t7o", "q4v8y6a9h3k", "t9s7d5w3o2c", "g7j3m6s8v2p", "l4k5n9v3a8z", 
+      // Add more passwords up to 1000...
+      "s3t9c8w7f1g", "b9v6d2h8k1r", "p7u4y9a6f5t", "z3q8w5e4r9k", "j5p6g1h7r3o"
+    ];
+
+    const maxDevices = 2;
+    const expiryDuration = 30 * 24 * 60 * 60 * 1000; // 1 month in milliseconds
+
+    function submitCode() {
+      const activationCode = document.getElementById('activation-code').value;
+      const storedData = JSON.parse(localStorage.getItem('activationData')) || {};
+      const currentDevice = getDeviceID(); // Simulate getting a unique device identifier
+
+      // Check if the password is valid
+      if (!validPasswords.includes(activationCode)) {
+        alert("Invalid password.");
+        return;
+      }
+
+      const currentTime = new Date().getTime();
+
+      // Initialize device data if it doesn't exist
+      if (!storedData[activationCode]) {
+        storedData[activationCode] = {
+          devices: {},
+          expiry: currentTime + expiryDuration
+        };
+      }
+
+      // Check if password has expired
+      if (currentTime > storedData[activationCode].expiry) {
+        alert("Password has expired.");
+        return;
+      }
+
+      // Check device usage
+      if (!storedData[activationCode].devices[currentDevice]) {
+        const usedDevices = Object.keys(storedData[activationCode].devices).length;
+
+        if (usedDevices >= maxDevices) {
+          alert("Device limit reached.");
+          return;
+        }
+
+        // Register new device
+        storedData[activationCode].devices[currentDevice] = {
+          lastUsed: currentTime
+        };
+        alert("Device registered.");
+      } else {
+        alert("Device already registered.");
+      }
+
+      // Save the updated data to localStorage
+      localStorage.setItem('activationData', JSON.stringify(storedData));
+      window.location.href = "https://your-website-url.com"; // Redirect to the website
+    }
+
+    // Simulate device ID (in practice, you might use more reliable identification)
+    function getDeviceID() {
+      return navigator.userAgent; // Here, we're using the user agent as a unique device identifier
+    }
+  </script>
+</body>
+</html>
