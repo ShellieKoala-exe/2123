@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="manifest.json">
     <script>
         // Function to check if the page is accessed from a homescreen shortcut
         function isHomescreen() {
-            return (window.navigator.standalone === true);
+            return (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true);
         }
 
         // Function to validate the password
