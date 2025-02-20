@@ -1,0 +1,27 @@
+{
+  "codes": {
+    "ABC123": {
+      "usedOn": [
+        {
+          "ip": "192.168.1.1",
+          "device": "Device1",
+          "timestamp": "2025-02-20T10:00:00Z"
+        },
+        {
+          "ip": "192.168.1.2",
+          "device": "Device2",
+          "timestamp": "2025-02-20T12:00:00Z"
+        }
+      ]
+    },
+    "XYZ456": {
+      "usedOn": [
+        {
+          "ip": "192.168.2.1",
+          "device": "Device3",
+          "timestamp": "2025-02-19T15:00:00Z"
+        }
+      ]
+    }
+  }
+}
