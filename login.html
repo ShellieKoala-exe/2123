@@ -35,8 +35,11 @@
                 return;
             }
 
+            console.log('Validating password:', password);
+
             // Load passwords from passwords.json
             const passwords = await loadPasswords();
+            console.log('Loaded passwords:', passwords);
 
             // Check if the password exists
             if (!passwords[password]) {
@@ -55,6 +58,7 @@
 
             // Save the updated passwords back to localStorage
             localStorage.setItem('passwords', JSON.stringify(passwords));
+            console.log('Updated passwords:', passwords);
 
             // Redirect to the target page
             window.location.href = 'https://venswish.vercel.app/index.html';
